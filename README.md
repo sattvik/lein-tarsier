@@ -81,6 +81,17 @@ Finally, you can override any profile- or project-based settings at the command 
 
     lein vimclojure :repl true :port 42
 
+## Overriding the VimClojure server version
+
+This plug-in is configured to use version 2.3.1 of the VimClojure server by
+default.  However, you can override this by manually specifying the dependency
+in your project.
+
+For example, to use version 2.2.0 of the server, you could add the following
+dependency to your project:
+
+    [vimclojure/server "2.2.0"]
+
 ## TODO
 
 There are a number of features that may be added to the plug-in:
