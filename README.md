@@ -20,18 +20,18 @@ plug-in.
 
 ### Leiningen 2
 
-Add `[sattvik/lein-vimclojure "0.9.0"]` to the `plugins` vector of your `:user`
+Add `[com.sattvik/lein-vimclojure "0.9.0"]` to the `plugins` vector of your `:user`
 profile located in `~/.lein/profiles.clj`.  For example:
 
 ```clj
-    {:user {:plugins [[sattvik/lein-vimclojure "0.9.0"]]}}
+    {:user {:plugins [[com.sattvik/lein-vimclojure "0.9.0"]]}}
 ```
 
 ### Leiningen 1
 
 Just run:
 
-    lein plugin install sattvik/lein-vimclojure 0.9.0
+    lein plugin install com.sattvik/lein-vimclojure 0.9.0
 
 ## Use
 
@@ -59,7 +59,7 @@ You can set these options using the profile feature of Leiningen 2.  For
 example:
 
 ```clj
-    {:user {:plugins [[sattvik/lein-vimclojure "0.9.0"]]
+    {:user {:plugins [[com.sattvik/lein-vimclojure "0.9.0"]]
             :vimclojure-opts {:repl true
 	                      :port 42}}}
 ```

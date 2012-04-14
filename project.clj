@@ -1,4 +1,4 @@
-(defproject sattvik/lein-vimclojure "0.9.0"
+(defproject com.sattvik/lein-vimclojure "0.9.0"
   :description "Launches a VimClojure server for Vim."
   :url "https://github.com/sattvik/lein-vimclojure"
   :license {:name "Eclipse Public License"
