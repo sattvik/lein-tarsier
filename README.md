@@ -1,4 +1,4 @@
-# lein-vimclojure
+# lein-tarsier
 
 A fully-featured Leiningen plugin to run a VimClojure server for Leiningen
 projects.
@@ -20,18 +20,18 @@ plug-in.
 
 ### Leiningen 2
 
-Add `[com.sattvik/lein-vimclojure "0.9.0"]` to the `plugins` vector of your `:user`
+Add `[lein-tarsier "0.9.1"]` to the `plugins` vector of your `:user`
 profile located in `~/.lein/profiles.clj`.  For example:
 
 ```clj
-    {:user {:plugins [[com.sattvik/lein-vimclojure "0.9.0"]]}}
+    {:user {:plugins [[lein-tarsier "0.9.1"]]}}
 ```
 
 ### Leiningen 1
 
 Just run:
 
-    lein plugin install com.sattvik/lein-vimclojure 0.9.0
+    lein plugin install lein-tarsier 0.9.1
 
 ## Use
 
@@ -59,7 +59,7 @@ You can set these options using the profile feature of Leiningen 2.  For
 example:
 
 ```clj
-    {:user {:plugins [[com.sattvik/lein-vimclojure "0.9.0"]]
+    {:user {:plugins [[lein-tarsier "0.9.1"]]
             :vimclojure-opts {:repl true
 	                      :port 42}}}
 ```
@@ -91,6 +91,12 @@ For example, to use version 2.2.0 of the server, you could add the following
 dependency to your project:
 
     [vimclojure/server "2.2.0"]
+
+## About the name
+
+In order to minimise confusion between this plug-in and other `lein-nailgun`
+and `lein-vimclojure` plug-ins, this plug-in is named `lein-tarsier`, in honour
+of the animal that appears on the cover of _Learning the vi and Vim Editors_.
 
 ## TODO
 
