@@ -4,7 +4,7 @@
   (:require [leiningen.vimclojure
                [eval-in-project :as eip]
                [deps :as deps]]
-            [leiningen.vimclojure.options.vimclojure :as vimopt])
+            [leiningen.vimclojure.options.tarsier :as tarsier-opts])
   (:use [trammel.core :only [defconstrainedfn]])
   (:import java.net.InetAddress))
 
@@ -56,12 +56,12 @@
   "Generates a form to be evaluated in the project's context."
   [project]
   [deps/has-vimclojure?
-   (instance? InetAddress (vimopt/get-opt project :host))
-   (integer? (vimopt/get-opt project :port))
+   (instance? InetAddress (tarsier-opts/host project))
+   (integer? (tarsier-opts/port project))
    => form?]
-  (let [host (.getHostAddress (vimopt/get-opt project :host))
-        port (str (vimopt/get-opt project :port))]
-    (if (vimopt/get-opt project :repl)
+  (let [host (.getHostAddress (tarsier-opts/host project))
+        port (str (tarsier-opts/port project))]
+    (if (tarsier-opts/repl project)
       (run-repl-form host port)
       (run-server-form host port))))
 
@@ -84,6 +84,6 @@
   Command line options override project options."
   [project & args]
   (let [project (-> project
-                    (vimopt/update-options args)
+                    (tarsier-opts/update-options args)
                     deps/add-vimclojure)]
     (eip/eval-in-project project (vimclojure-form project))))

@@ -1,4 +1,4 @@
-(ns leiningen.vimclojure.options.vimclojure
+(ns leiningen.vimclojure.options.tarsier
   "Handles the :vimclojure-opts configuration."
   {:author "Daniel Solano Gómez"}
   (:import java.net.InetAddress)
@@ -75,8 +75,21 @@
              merge (-> (merge-options project args)
                                       validate-options)))
 
-(defconstrainedfn get-opt
+(defconstrainedfn ^{:private true} get-opt
   "Gets the value of the given plug-in option from the project."
   [project opt]
   [(:vimclojure-opts project)]
   (get-in project [:vimclojure-opts opt]))
+
+(defmacro defoptfn
+  "Creates a convenience function for getting the given option."
+  [opt]
+  `(defn ~(-> opt name symbol)
+     ~(str "Get the value of the " opt " option from the project.")
+     {:arglists '([~'project])}
+     [project#]
+     (get-opt project# ~opt)))
+
+(defoptfn :host)
+(defoptfn :port)
+(defoptfn :repl)
