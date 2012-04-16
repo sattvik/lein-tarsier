@@ -68,9 +68,7 @@
   
   Command line options override project options."
   [project & args]
-  (let [options (-> (vimopt/get-options project args)
-                    (vimopt/validate-options))
-        project (-> project
-                    deps/add-vimclojure
-                    (update-in [:vimclojure-opts] merge options))]
+  (let [project (-> project
+                    (vimopt/update-options args)
+                    deps/add-vimclojure)]
     (eip/eval-in-project project (vimclojure-form project))))

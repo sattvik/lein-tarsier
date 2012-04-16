@@ -50,8 +50,8 @@
     (int n)
     (Integer/parseInt (str n))))
 
-(defn get-options
-  "Gets the options from the defaults, the project, and the command line
+(defn merge-options
+  "Merges the options from the defaults, the project, and the command line
   arguments."
   [project args]
   (merge default-opts
@@ -65,6 +65,15 @@
       (update-in [:host] to-inetaddress)
       (update-in [:port] to-int)
       (update-in [:repl] to-boolean)))
+
+(defn update-options
+  "Updates the project with validated options from the profile, project, and
+  command line."
+  [project args]
+  (update-in project
+             [:vimclojure-opts]
+             merge (-> (merge-options project args)
+                                      validate-options)))
 
 (defconstrainedfn get-opt
   "Gets the value of the given plug-in option from the project."
