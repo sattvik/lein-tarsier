@@ -8,10 +8,16 @@
   (:use [trammel.core :only [defconstrainedfn]])
   (:import java.net.InetAddress))
 
-(defconstrainedfn run-server-form
-  "Generates a form that will run the server and cleanly it shut down when the
-  user interrupts the process."
-  [host port]
+(defn- form?
+  "Checks to see if the argument is a form."
+  [x]
+  (instance? clojure.lang.Cons x))
+
+(defconstrainedfn with-server
+  "Creates a form that will create a VimClojure server on the given host and
+  port.  It will then call the thunk with the server as an argument."
+  [host port thunk]
+  [(string? host) (string? port) (form? thunk) => form?]
   `(let [server#      (~'vimclojure.nailgun.NGServer. 
                           (java.net.InetAddress/getByName ~host)
                           (Integer/parseInt ~port))
@@ -19,31 +25,40 @@
                                  (run [_]
                                    (.shutdown server# false))))]
      (.. (Runtime/getRuntime) (addShutdownHook shutdowner#))
-     (println (str "Starting VimClojure server on " ~host ", port " ~port))
-     (println "Happy hacking!")
-     (.run server#)))
+     (~thunk server#)))
+
+(defconstrainedfn run-server-form
+  "Generates a form that will run the server and cleanly it shut down when the
+  user interrupts the process."
+  [host port]
+  [(string? host) (string? port) => form?]
+  (with-server host port
+    `(fn [server#]
+       (println (str "Starting VimClojure server on " ~host ", port " ~port))
+       (println "Happy hacking!")
+       (.run server#))))
 
 (defconstrainedfn run-repl-form
   "Generates a form that will run the server in the background and provide a
   REPL in the foreground.  The server will shut down when the REPL terminates."
   [host port]
-  `(let [server#      (~'vimclojure.nailgun.NGServer. 
-                          (java.net.InetAddress/getByName ~host)
-                          (Integer/parseInt ~port))
-         thread#      (Thread. server#)]
-     (println (str "Starting VimClojure server on " ~host ", port " ~port))
-     (.start thread#)
-     (println "Clojure" (clojure-version))
-     (clojure.main/repl)
-     (.shutdown server# false)))
-
+  [(string? host) (string? port) => form?]
+  (with-server host port
+    `(fn [server#]
+       (let [thread# (Thread. server#)]
+         (println (str "Starting VimClojure server on " ~host ", port " ~port))
+         (.start thread#)
+         (println "Clojure" (clojure-version))
+         (clojure.main/repl)
+         (.shutdown server# false)))))
 
 (defconstrainedfn vimclojure-form
   "Generates a form to be evaluated in the project's context."
   [project]
   [deps/has-vimclojure?
    (instance? InetAddress (vimopt/get-opt project :host))
-   (integer? (vimopt/get-opt project :port))]
+   (integer? (vimopt/get-opt project :port))
+   => form?]
   (let [host (.getHostAddress (vimopt/get-opt project :host))
         port (str (vimopt/get-opt project :port))]
     (if (vimopt/get-opt project :repl)
