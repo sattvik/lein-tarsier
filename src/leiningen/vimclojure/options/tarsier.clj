@@ -7,7 +7,7 @@
 (def ^{:private true
        :doc "Default values for the plug-in options."}
   default-opts
-  {:host (InetAddress/getByName "127.0.0.1")
+  {:host "127.0.0.1"
    :port 2113
    :repl false})
 
@@ -27,14 +27,23 @@
        (mapcat read-keys)
        (apply hash-map)))
 
-(defmulti to-inetaddress
-  "Converts the argument into an InetAddress instance."
-  {:post [#(instance? InetAddress %)]}
+(defmulti validate-host
+  "Validates the address as being valid and converts it to a String."
+  {:post [#(string? %)
+          #(InetAddress/getByName %)]}
   type)
 
-(defmethod to-inetaddress InetAddress [addr] addr)
-(defmethod to-inetaddress String [s] (InetAddress/getByName s))
-(defmethod to-inetaddress :default [x] (to-inetaddress (str x)))
+(defmethod validate-host InetAddress
+  [host]
+  (.getHostName host))
+
+(defmethod validate-host String
+  [host]
+  (validate-host (InetAddress/getByName host)))
+
+(defmethod validate-host :host
+  [host]
+  (validate-host (str host)))
 
 (defconstrainedfn to-boolean
   "Converts the argument into a boolean value."
@@ -62,7 +71,7 @@
   "Validates the options to make sure they contain valid values."
   [options]
   (-> options
-      (update-in [:host] to-inetaddress)
+      (update-in [:host] validate-host)
       (update-in [:port] to-int)
       (update-in [:repl] to-boolean)))
 

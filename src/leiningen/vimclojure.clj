@@ -56,10 +56,10 @@
   "Generates a form to be evaluated in the project's context."
   [project]
   [deps/has-vimclojure?
-   (instance? InetAddress (tarsier-opts/host project))
+   (string? (tarsier-opts/host project))
    (integer? (tarsier-opts/port project))
    => form?]
-  (let [host (.getHostAddress (tarsier-opts/host project))
+  (let [host (tarsier-opts/host project)
         port (str (tarsier-opts/port project))]
     (if (tarsier-opts/repl project)
       (run-repl-form host port)
