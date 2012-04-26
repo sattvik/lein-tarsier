@@ -1,9 +1,8 @@
 (ns leiningen.vimclojure
   "Adds VimClojure server support to a Leiningen project."
   {:author "Daniel Solano Gómez"}
-  (:require [leiningen.vimclojure
-               [eval-in-project :as eip]
-               [deps :as deps]]
+  (:require [leinjacker.eval-in-project :as eip]
+            [leiningen.vimclojure.deps :as deps]
             [leiningen.vimclojure.options.tarsier :as tarsier-opts])
   (:use [trammel.core :only [defconstrainedfn]])
   (:import java.net.InetAddress))
@@ -17,53 +16,43 @@
   "Creates a form that will create a VimClojure server on the given host and
   port.  It will then call the thunk with the server as an argument."
   [host port thunk]
-  [(string? host) (string? port) (form? thunk) => form?]
+  [(string? host) (integer? port) (form? thunk) => form?]
   `(let [server#      (~'vimclojure.nailgun.NGServer. 
                           (java.net.InetAddress/getByName ~host)
-                          (Integer/parseInt ~port))
+                          (Integer/parseInt ~(str port)))
          shutdowner#  (Thread. (reify Runnable
                                  (run [_]
                                    (.shutdown server# false))))]
      (.. (Runtime/getRuntime) (addShutdownHook shutdowner#))
      (~thunk server#)))
 
-(defconstrainedfn run-server-form
-  "Generates a form that will run the server and cleanly it shut down when the
-  user interrupts the process."
-  [host port]
-  [(string? host) (string? port) => form?]
-  (with-server host port
-    `(fn [server#]
-       (println (str "Starting VimClojure server on " ~host ", port " ~port))
-       (println "Happy hacking!")
-       (.run server#))))
+(defconstrainedfn launch-server
+  "Launches the server and cleanly shuts it down when the user interrupts the
+  process."
+  [project host port]
+  [(string? host) (integer? port)]
+  (eip/eval-in-project
+    project
+    (with-server host port
+      `(fn [server#]
+         (println (str "Starting VimClojure server on " ~host ", port " ~port))
+         (println "Happy hacking!")
+         (.run server#)))))
 
-(defconstrainedfn run-repl-form
+(defconstrainedfn launch-repl
   "Generates a form that will run the server in the background and provide a
   REPL in the foreground.  The server will shut down when the REPL terminates."
-  [host port]
-  [(string? host) (string? port) => form?]
-  (with-server host port
-    `(fn [server#]
-       (let [thread# (Thread. server#)]
-         (println (str "Starting VimClojure server on " ~host ", port " ~port))
-         (.start thread#)
-         (println "Clojure" (clojure-version))
-         (clojure.main/repl)
-         (.shutdown server# false)))))
-
-(defconstrainedfn vimclojure-form
-  "Generates a form to be evaluated in the project's context."
-  [project]
-  [deps/has-vimclojure?
-   (string? (tarsier-opts/host project))
-   (integer? (tarsier-opts/port project))
-   => form?]
-  (let [host (tarsier-opts/host project)
-        port (str (tarsier-opts/port project))]
-    (if (tarsier-opts/repl project)
-      (run-repl-form host port)
-      (run-server-form host port))))
+  [project host port]
+  [(string? host) (integer? port)]
+  (eip/eval-in-project project
+    (with-server host port
+      `(fn [server#]
+         (let [thread# (Thread. server#)]
+           (println (str "Starting VimClojure server on " ~host ", port " ~port))
+           (.start thread#)
+           (println "Clojure" (clojure-version))
+           (clojure.main/repl)
+           (.shutdown server# false))))))
 
 (defn vimclojure
   "Launches a VimClojure server.
@@ -85,5 +74,9 @@
   [project & args]
   (let [project (-> project
                     (tarsier-opts/update-options args)
-                    deps/add-vimclojure)]
-    (eip/eval-in-project project (vimclojure-form project))))
+                    deps/add-vimclojure)
+        host    (tarsier-opts/host project)
+        port    (tarsier-opts/port project)]
+    (if (tarsier-opts/repl project)
+      (launch-repl project host port)
+      (launch-server project host port))))

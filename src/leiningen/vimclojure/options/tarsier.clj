@@ -34,7 +34,7 @@
   type)
 
 (defmethod validate-host InetAddress
-  [host]
+  [^InetAddress host]
   (.getHostName host))
 
 (defmethod validate-host String
@@ -67,7 +67,7 @@
          (:vimclojure-opts project)
          (args->options args)))
 
-(defn validate-options
+(defn- validate-options
   "Validates the options to make sure they contain valid values."
   [options]
   (-> options
@@ -82,7 +82,7 @@
   (update-in project
              [:vimclojure-opts]
              merge (-> (merge-options project args)
-                                      validate-options)))
+                       validate-options)))
 
 (defconstrainedfn ^{:private true} get-opt
   "Gets the value of the given plug-in option from the project."
