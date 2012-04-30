@@ -8,14 +8,16 @@
             [leiningen.core.eval :as eval]
             [leiningen.core.project :as project]
             [leinjacker.utils :as utils]
-            [reply.main :as reply])
+            [reply.main :as reply]
+            reply.exit)
   (:use [trammel.core :only [defconstrainedfn]]))
 
 (defconstrainedfn ^{:private true} start-server
   "This a modified version of Lein 2’s `leiningen.repl/start-server` to
   accomodate the VimClojure server.  One particularly evil thing that I do here
   is redefine `reply.exit/exit` so that it shuts down the VimClojure server.
-  Otherwise the process will just hang to my great annoyance."
+  Otherwise the process will just hang to my great annoyance.  This seems to
+  only happen to plug-in projects."
   [project port ack-port vimclojure-host vimclojure-port with-server]
   [(or (map? project) (nil? project))
    (integer? port)
@@ -25,19 +27,19 @@
   (let [server-starting-form
         (with-server
           `(fn [vimclojure#]
-             (require 'reply.exit)
-             ; This is evil.  But otherwise the process will just hang.
-             (alter-var-root #'reply.exit/exit
-                             (fn [f#]
-                               (fn []
-                                 (try
-                                   (.shutdown vimclojure# false)
-                                   (catch Throwable _#))
-                                 (f#))))
+             (when-let [exit-var# (try (resolve 'reply.exit/exit)
+                                    (catch Throwable _#))]
+               (alter-var-root exit-var#
+                               (fn [f#]
+                                 (fn []
+                                   (try
+                                     (.shutdown vimclojure# false)
+                                     (catch Throwable _#))
+                                   (f#)))))
              (let [server# (clojure.tools.nrepl.server/start-server
                              :port ~port :ack-port ~ack-port)]
-               (println (str "Starting VimClojure server on" ~vimclojure-host
-                             ", " ~vimclojure-port))
+               (println (str "Starting VimClojure server on "
+                             ~vimclojure-host ", " ~vimclojure-port))
                (.start (Thread. vimclojure#))
                (println "nREPL server started on port"
                         (-> server# deref :ss .getLocalPort))
@@ -85,5 +87,5 @@
                                                    30000))]
         (reply/launch-nrepl (if (= mode :preview3)
                               (repl/options-for-reply repl-port project)
-                              (repl/options-for-reply project :attach repl-port)))
-        (println "REPL server launch timed out.")))))
+                              (repl/options-for-reply project :attach repl-port))))
+        (println "REPL server launch timed out."))))
