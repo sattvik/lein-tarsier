@@ -15,7 +15,7 @@ This page will list all of the latest changes in lein-tarsier.
 
 ### Bug fixes
 
-* Fix problem with console I/O when running the REPL #1
+* Fix problem with console I/O when running the REPL. [Issue 1](https://github.com/sattvik/lein-tarsier/issues/1)
 
 ### Known issues
 
