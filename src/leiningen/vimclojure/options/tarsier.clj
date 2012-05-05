@@ -28,19 +28,24 @@
        (apply hash-map)))
 
 (defmulti validate-host
-  "Validates the address as being valid and converts it to a String."
+  "Validates the address as being valid and converts it to a string."
   {:post [#(string? %)
           #(InetAddress/getByName %)]}
   type)
 
+;; If the host is a valid InetAddress, just return the its name as a string
 (defmethod validate-host InetAddress
   [^InetAddress host]
   (.getHostName host))
 
+;; If the host is a string, try to parse it into an InetAddress.  If
+;; successful, this will eventually be recursively transformed back into a
+;; string.
 (defmethod validate-host String
   [host]
   (validate-host (InetAddress/getByName host)))
 
+;; For any other value, coerce it into a string and try again.
 (defmethod validate-host :host
   [host]
   (validate-host (str host)))
@@ -99,6 +104,7 @@
      [project#]
      (get-opt project# ~opt)))
 
+;; Create the convenience functions host, port, and repl
 (defoptfn :host)
 (defoptfn :port)
 (defoptfn :repl)
