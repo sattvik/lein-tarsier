@@ -46,7 +46,7 @@
                (while true (Thread/sleep Long/MAX_VALUE)))))]
     (if project
       (eval/eval-in-project
-        (project/merge-profile project repl/profile)
+        (project/merge-profiles project #{repl/profile})
         server-starting-form
         '(do (require 'clojure.tools.nrepl.server)
              (require 'complete.core)))
