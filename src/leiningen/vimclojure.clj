@@ -1,7 +1,7 @@
 (ns leiningen.vimclojure
   "Adds VimClojure server support to a Leiningen project."
   {:author "Daniel Solano Gómez"}
-  (:require [leinjacker.eval-in-project :as eip]
+  (:require [leinjacker.eval :as eip]
             [leiningen.vimclojure.deps :as deps]
             [leiningen.vimclojure.options.tarsier :as tarsier-opts]
             [leiningen.vimclojure.repl :as repl])

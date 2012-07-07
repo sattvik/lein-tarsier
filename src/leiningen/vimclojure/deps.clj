@@ -5,7 +5,7 @@
   (:use [trammel.core :only [defconstrainedfn]]))
 
 (def ^{:private true
-       :doc "The name  of the VimClojure dependency."}
+       :doc "The name of the VimClojure dependency."}
   vimclojure-spec ['vimclojure/server "2.3.1"])
 
 (defn has-vimclojure?
