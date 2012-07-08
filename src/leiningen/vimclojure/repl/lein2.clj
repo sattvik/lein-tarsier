@@ -7,6 +7,7 @@
             [leiningen.trampoline :as trampoline]
             [leiningen.core.eval :as eval]
             [leiningen.core.project :as project]
+            [leiningen.core.user :as user]
             [leinjacker.utils :as utils]
             [reply.main :as reply]
             reply.exit)
@@ -46,7 +47,7 @@
                (while true (Thread/sleep Long/MAX_VALUE)))))]
     (if project
       (eval/eval-in-project
-        (project/merge-profiles project #{repl/profile})
+        (project/merge-profiles project [(:repl (user/profiles) repl/profile)])
         server-starting-form
         '(do (require 'clojure.tools.nrepl.server)
              (require 'complete.core)))
@@ -59,33 +60,49 @@
   [(or (map? project) (nil? project))
    (string? vimclojure-host)
    (integer? vimclojure-port)]
-  (if trampoline/*trampoline?*
-    (println "lein-tarsier does not yet support trampoline with Lein 2 (wait for preview 4)"))
-  (let [mode (if (utils/try-resolve 'leiningen.repl/trampoline-profile)
-               :master
-               :preview3)]
-    (when (= mode :master)
-      (println "You are running a bleeding edge version of Leiningen,"
-               "all warranties are null and void."))
-    (nrepl.ack/reset-ack-port!)
-    (let [prepped (promise)
-          repl-port @(resolve 'leiningen.repl/repl-port)]
-      (.start
-        (Thread.
-          (bound-fn []
-            (start-server (and project (vary-meta project assoc
-                                                  :prepped prepped))
-                          (repl-port project)
-                          (-> @repl/lein-repl-server deref :ss .getLocalPort)
-                          vimclojure-host
-                          vimclojure-port
-                          with-server))))
-      (and project @prepped)
-      (if-let [repl-port (nrepl.ack/wait-for-ack (or (-> project
-                                                         :repl-options
-                                                         :timeout)
-                                                   30000))]
-        (reply/launch-nrepl (if (= mode :preview3)
-                              (repl/options-for-reply repl-port project)
-                              (repl/options-for-reply project :attach repl-port))))
-        (println "REPL server launch timed out."))))
+  (let [repl-port @(resolve 'leiningen.repl/repl-port)]
+    (if trampoline/*trampoline?*
+      (let [options (repl/options-for-reply project :port (repl-port project))
+            profiles [(:repl (user/profiles) repl/profile) repl/trampoline-profile]]
+        (eval/eval-in-project
+          (project/merge-profiles project profiles)
+          (with-server
+            `(fn [vimclojure#]
+               (when-let [exit-var# (try (resolve 'reply.exit/exit)
+                                      (catch Throwable _#))]
+                 (alter-var-root exit-var#
+                                 (fn [f#]
+                                   (fn []
+                                     (try
+                                       (.shutdown vimclojure# false)
+                                       (catch Throwable _#))
+                                     (f#)))))
+               (println (str "Starting VimClojure server on "
+                             ~vimclojure-host ", "
+                             ~vimclojure-port))
+               (.. (Thread. vimclojure#) start)
+               (reply.main/launch-nrepl ~options)))
+          '(do
+             (require 'reply.main)
+             (require 'clojure.tools.nrepl.server)
+             (require 'complete.core))))
+      (do
+        (nrepl.ack/reset-ack-port!)
+        (let [prepped (promise)]
+          (.start
+            (Thread.
+              (bound-fn []
+                (start-server (and project (vary-meta project assoc
+                                                      :prepped prepped))
+                              (repl-port project)
+                              (-> @repl/lein-repl-server deref :ss .getLocalPort)
+                              vimclojure-host
+                              vimclojure-port
+                              with-server))))
+          (and project @prepped)
+          (if-let [repl-port (nrepl.ack/wait-for-ack (or (-> project
+                                                           :repl-options
+                                                           :timeout)
+                                                         30000))]
+            (reply/launch-nrepl (repl/options-for-reply project :attach repl-port))
+            (println "REPL server launch timed out.")))))))
