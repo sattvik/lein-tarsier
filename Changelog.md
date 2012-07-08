@@ -2,6 +2,18 @@
 
 This page will list all of the latest changes in lein-tarsier.
 
+## 0.9.3 (unreleased)
+
+### New features
+
+* Now supports trampoline with Leiningen 2.
+
+### Bug fixes
+
+* Fix problem with `leiningen.core.project/merge-profile` introduced in recent
+  Leiningen 2 preview releases (thanks to Jeremy Holland).
+  [Issue 4](https://github.com/sattvik/lein-tarsier/issues/4)
+
 ## 0.9.2
 
 ### New features

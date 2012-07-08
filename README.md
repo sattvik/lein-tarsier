@@ -83,7 +83,7 @@ Finally, you can override any profile- or project-based settings at the command 
 
 ## Overriding the VimClojure server version
 
-This plug-in is configured to use version 2.3.1 of the VimClojure server by
+This plug-in is configured to use version 2.3.3 of the VimClojure server by
 default.  However, you can override this by manually specifying the dependency
 in your project.
 
@@ -102,9 +102,12 @@ of the animal that appears on the cover of _Learning the vi and Vim Editors_.
 
 There are a number of features that may be added to the plug-in:
 
-* The ability to run an initialisation script when launching the server
-* Adding more features the REPL, such as ClojureDocs support
 * The ability to hook onto other Leiningen commands
+
+## Contributors
+
+* Jeremy Holland
+* Katsunori Kanda
 
 ## License
 
