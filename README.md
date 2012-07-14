@@ -20,18 +20,18 @@ plug-in.
 
 ### Leiningen 2
 
-Add `[lein-tarsier "0.9.2"]` to the `plugins` vector of your `:user`
+Add `[lein-tarsier "0.9.3"]` to the `plugins` vector of your `:user`
 profile located in `~/.lein/profiles.clj`.  For example:
 
 ```clj
-    {:user {:plugins [[lein-tarsier "0.9.2"]]}}
+    {:user {:plugins [[lein-tarsier "0.9.3"]]}}
 ```
 
 ### Leiningen 1
 
 Just run:
 
-    lein plugin install lein-tarsier 0.9.2
+    lein plugin install lein-tarsier 0.9.3
 
 ## Use
 
@@ -59,7 +59,7 @@ You can set these options using the profile feature of Leiningen 2.  For
 example:
 
 ```clj
-    {:user {:plugins [[lein-tarsier "0.9.2"]]
+    {:user {:plugins [[lein-tarsier "0.9.3"]]
             :vimclojure-opts {:repl true
 	                      :port 42}}}
 ```
