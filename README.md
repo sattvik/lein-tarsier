@@ -32,6 +32,30 @@ profile located in `~/.lein/profiles.clj`.  For example:
 Just run:
 
     lein plugin install lein-tarsier 0.9.3
+### Vim Setup
+
+Next you need to setup vim to take advantage of the vim clojure (nailgun) server you
+just setup. In order to do that run: 
+
+    cd ~/.vim/bundle
+    git clone https://github.com/vim-scripts/VimClojure.git vimclojure
+
+Next you need to create the nailgun client:
+   
+    curl http://kotka.de/projects/vimclojure/vimclojure-nailgun-client-2.3.0.zip > /tmp/vimclojure-nailgun-client-2.3.0.zip
+    cd /tmp
+    unzip vimclojure-nailgun-client-2.3.0.zip
+    cd vimclojure-nailgun-client/
+    make
+    cp ng ~/bin/
+
+Note that ~/bin must be on your path
+
+Finally add the following lines to your .vimrc
+
+    syntax on
+    filetype plugin indent on
+    let vimclojure#WantNailgun = 1
 
 ## Use
 
@@ -40,6 +64,19 @@ Once the plug-in is installed, running it is as easy as:
     lein vimclojure
 
 The plug-in accepts some arguments, described in the next section.
+
+### Use in Vim
+
+All of the commands and configuration for the use of vim clojure in vim itself are handled
+by the [VimClojure Script](https://github.com/vim-scripts/VimClojure). Here are a few commands
+to get you started, but please see the script configuration for more details:
+
+ * `<LocalLeader>sr` – Start a repl
+ * `<LocalLeader>sR` – Start a repl in the current namespace
+ * `<LocalLeader>eb` – Evaluate current visual block. There are several “eX” variations.
+ * `<LocalLeader>lw` – Lookup docs for word under cursor. There are several “lX” lookup variations
+
+Thanks to [Dave Ray](http://blog.darevay.com/2010/10/how-i-tamed-vimclojure/) for a great starting point.
 
 ## Configuration
 
