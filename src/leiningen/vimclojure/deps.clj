@@ -6,7 +6,7 @@
 
 (def ^{:private true
        :doc "The name of the VimClojure dependency."}
-  vimclojure-spec ['vimclojure/server "2.3.3"])
+  vimclojure-spec ['vimclojure/server "2.3.5"])
 
 (defn has-vimclojure?
   "Returns a value that evaluates to true if the project has a VimClojure
