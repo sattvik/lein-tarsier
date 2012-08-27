@@ -14,11 +14,18 @@ tend to be fairly minimal.  In particular, most of them lacked two key features:
 
 ## Installation
 
+There are two parts to a successful lein-tarsier installation:
+
+1. Add VimClojure server support to Leiningen.
+2. Set up the client within Vim itself.
+
+### Leiningen set-up
+
 While you can install this plug-in by adding it to the `:plugins` vector of
 your `project.clj`, it probably makes more sense to install it as a user-level
 plug-in.
 
-### Leiningen 2
+#### Leiningen 2
 
 Add `[lein-tarsier "0.9.3"]` to the `plugins` vector of your `:user`
 profile located in `~/.lein/profiles.clj`.  For example:
@@ -27,31 +34,60 @@ profile located in `~/.lein/profiles.clj`.  For example:
     {:user {:plugins [[lein-tarsier "0.9.3"]]}}
 ```
 
-### Leiningen 1
+#### Leiningen 1
 
 Just run:
 
     lein plugin install lein-tarsier 0.9.3
-### Vim Setup
 
-Next you need to setup vim to take advantage of the vim clojure (nailgun) server you
-just setup. In order to do that run: 
+
+### Vim set-up
+
+Next, you need to set up Vim to take advantage of the VimClojure server support
+you just added to Leiningen.  There are three parts to this installation:
+
+1. Add the plug-in to Vim.
+2. Get the nailgun client.
+3. Ensure that VimClojure will use the nailgun client.
+
+> _If you are interested in a quick Vim set-up and don't mind setting aside your
+> vimrc, check out Dave Ray’s [vimclojure-easy][easy]._
+
+[easy]: https://github.com/daveray/vimclojure-easy "VimClojure - Easy Peasy Lemon Squeezy"
+
+#### Installing the plug-in
+
+The VimClojure client is officially available from its [script
+page][vimscript].  However, if you are using a Vim plug-in manager like
+[Pathogen][pathogen], adding the VimClojure plug-in is as simple as:
 
     cd ~/.vim/bundle
     git clone https://github.com/vim-scripts/VimClojure.git vimclojure
 
-Next you need to create the nailgun client:
-   
-    curl http://kotka.de/projects/vimclojure/vimclojure-nailgun-client-2.3.0.zip > /tmp/vimclojure-nailgun-client-2.3.0.zip
-    cd /tmp
-    unzip vimclojure-nailgun-client-2.3.0.zip
+[vimscript]: http://www.vim.org/scripts/script.php?script_id=2501 "VimClojure on vim.org"
+[pathogen]: https://github.com/tpope/vim-pathogen "Tim Pope's excellent vim-pathogen"
+
+#### Getting the nailgun client
+
+In order for the plug-in to actually talk to Leiningen, it relies on an
+external executable called `ng`.  You can get it from [here][ngzip].
+
+If you are using a Windows system, you will find the client, `ng.exe`, within
+the zip in the `vimclojure-nailgun-client` directory.
+
+If you are on Unix-like system, you will need to build the client as follows:
+
     cd vimclojure-nailgun-client/
     make
     cp ng ~/bin/
 
 Note that ~/bin must be on your path
 
-Finally add the following lines to your .vimrc
+[ngzip]: http://kotka.de/projects/vimclojure/vimclojure-nailgun-client-2.3.0.zip "vimclojure-nailgun-client-2.3.0.zip"
+
+#### Getting VimClojure to use the client
+
+Finally add the following lines to your `.vimrc`:
 
     syntax on
     filetype plugin indent on
@@ -67,16 +103,18 @@ The plug-in accepts some arguments, described in the next section.
 
 ### Use in Vim
 
-All of the commands and configuration for the use of vim clojure in vim itself are handled
-by the [VimClojure Script](https://github.com/vim-scripts/VimClojure). Here are a few commands
-to get you started, but please see the script configuration for more details:
+All of the commands and configuration for the use of VimClojure in Vim itself
+are handled by the plug-in. Here are a few commands to get you started, but
+please be sure to run `:he vimclojure` within Vim to get the full details.
 
- * `<LocalLeader>sr` – Start a repl
- * `<LocalLeader>sR` – Start a repl in the current namespace
- * `<LocalLeader>eb` – Evaluate current visual block. There are several “eX” variations.
- * `<LocalLeader>lw` – Lookup docs for word under cursor. There are several “lX” lookup variations
+ * `<LocalLeader>sr` – Start a REPL
+ * `<LocalLeader>sR` – Start a REPL in the current namespace
+ * `<LocalLeader>eb` – Evaluate current visual block. There are several “e*X*” variations.
+ * `<LocalLeader>lw` – Lookup docs for word under cursor. There are several “l*X*” lookup variations
 
-Thanks to [Dave Ray](http://blog.darevay.com/2010/10/how-i-tamed-vimclojure/) for a great starting point.
+Thanks to [Dave Ray][tame] for a great starting point.
+
+[tame]: http://blog.darevay.com/2010/10/how-i-tamed-vimclojure/ "How I Tamed VimClojure"
 
 ## Configuration
 
@@ -145,6 +183,14 @@ There are a number of features that may be added to the plug-in:
 
 * Jeremy Holland
 * Katsunori Kanda
+* Dan Thiffault
+
+## Thanks
+
+In addition to all of the contributors above, a big thanks to [Meikel
+Brandmeyer][mb] for all his work on VimClojure.
+
+[mb]: http://kotka.de/ "Software – Made in Germany"
 
 ## License
 
