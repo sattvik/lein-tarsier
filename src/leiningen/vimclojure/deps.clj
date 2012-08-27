@@ -4,9 +4,10 @@
   (:require [leinjacker.deps :as deps])
   (:use [trammel.core :only [defconstrainedfn]]))
 
-(def ^{:private true
+(def ^{:internal true
        :doc "The name of the VimClojure dependency."}
-  vimclojure-spec ['vimclojure/server "2.3.6"])
+  vimclojure-spec ^:displace ['vimclojure/server "2.3.6"
+                              :exclusions ['org.clojure/clojure]])
 
 (defn has-vimclojure?
   "Returns a value that evaluates to true if the project has a VimClojure
