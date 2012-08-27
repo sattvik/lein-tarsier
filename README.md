@@ -158,7 +158,7 @@ Finally, you can override any profile- or project-based settings at the command 
 
 ## Overriding the VimClojure server version
 
-This plug-in is configured to use version 2.3.3 of the VimClojure server by
+This plug-in is configured to use version 2.3.6 of the VimClojure server by
 default.  However, you can override this by manually specifying the dependency
 in your project.
 
@@ -184,6 +184,7 @@ There are a number of features that may be added to the plug-in:
 * Jeremy Holland
 * Katsunori Kanda
 * Dan Thiffault
+* Paul Lam
 
 ## Thanks
 
