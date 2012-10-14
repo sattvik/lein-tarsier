@@ -2,6 +2,17 @@
 
 This page will list all of the latest changes in lein-tarsier.
 
+## 0.9.4
+
+### New features
+
+* Default VimClojure version is now 2.3.6
+
+### Bug fixes
+
+* Cleans up repl-port file on shutdown
+* Various fixes to work with latest Leiningen versions
+
 ## 0.9.3
 
 ### New features
