@@ -4,6 +4,6 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[trammel "0.7.0"]
-                 [leinjacker "0.3.2"]]
+                 [leinjacker "0.4.1"]]
   :min-lein-version "2.0.0"
   :eval-in-leiningen true)
