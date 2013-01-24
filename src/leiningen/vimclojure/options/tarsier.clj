@@ -2,7 +2,7 @@
   "Handles the :vimclojure-opts configuration."
   {:author "Daniel Solano Gómez"}
   (:import java.net.InetAddress)
-  (:use [trammel.core :only [defconstrainedfn]]))
+  (:use [leinjacker.defconstrainedfn :only [defconstrainedfn]]))
 
 (def ^{:private true
        :doc "Default values for the plug-in options."}

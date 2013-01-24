@@ -2,7 +2,7 @@
   "Handles adding dependencies to projects."
   {:author "Daniel Solano Gómez"}
   (:require [leinjacker.deps :as deps])
-  (:use [trammel.core :only [defconstrainedfn]]))
+  (:use [leinjacker.defconstrainedfn :only [defconstrainedfn]]))
 
 (def ^{:internal true
        :doc "The name of the VimClojure dependency."}

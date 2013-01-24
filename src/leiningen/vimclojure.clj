@@ -5,7 +5,7 @@
             [leiningen.vimclojure.deps :as deps]
             [leiningen.vimclojure.options.tarsier :as tarsier-opts]
             [leiningen.vimclojure.repl :as repl])
-  (:use [trammel.core :only [defconstrainedfn]])
+  (:use [leinjacker.defconstrainedfn :only [defconstrainedfn]])
   (:import java.net.InetAddress))
 
 (defn- form?

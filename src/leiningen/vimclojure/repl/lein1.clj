@@ -6,7 +6,7 @@
                        [deps :as deps]
                        [trampoline :as trampoline]
                        [repl :as repl]])
-  (:use [trammel.core :only [defconstrainedfn]]))
+  (:use [leinjacker.defconstrainedfn :only [defconstrainedfn]]))
 
 (defconstrainedfn run
   "Runs the REPL.  This is derived from Leiningen 1.x’s `leiningen.repl/repl`

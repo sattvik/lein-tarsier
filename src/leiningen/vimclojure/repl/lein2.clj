@@ -13,7 +13,7 @@
             [leinjacker.utils :as utils]
             [reply.main :as reply]
             reply.exit)
-  (:use [trammel.core :only [defconstrainedfn]]))
+  (:use [leinjacker.defconstrainedfn :only [defconstrainedfn]]))
 
 (def ^{:private true
        :doc     "A profile that contains the VimClojure server dependency."}

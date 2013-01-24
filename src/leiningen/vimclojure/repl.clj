@@ -2,7 +2,7 @@
   "Provides the interface to the REPL for lein-tarsier."
   {:author "Daniel Solano Gómez"}
   (:require [leinjacker.utils :as utils])
-  (:use [trammel.core :only [defconstrainedfn]]))
+  (:use [leinjacker.defconstrainedfn :only [defconstrainedfn]]))
 
 (def ^{:private true
        :doc "Map of Leiningen generation to REPL run functions."}
