@@ -2,6 +2,12 @@
 
 This page will list all of the latest changes in lein-tarsier.
 
+## 0.10.0-SNAPSHOT
+
+### Bug fixes
+
+* Should now work with Leiningen 2.0.0
+
 ## 0.9.4
 
 ### New features
