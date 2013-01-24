@@ -185,6 +185,7 @@ There are a number of features that may be added to the plug-in:
 * Katsunori Kanda
 * Dan Thiffault
 * Paul Lam
+* bouzuya
 
 ## Thanks
 
