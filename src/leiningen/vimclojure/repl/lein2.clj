@@ -59,9 +59,8 @@
                @(promise))))]
     (if project
       (eval/eval-in-project
-        (project/merge-profiles project [(:repl (user/profiles) repl/profile)
-                                         repl/reply-profile
-                                         vimclojure-profile])
+        (project/merge-profiles project (conj (repl/profiles-for project false true)
+                                              vimclojure-profile))
         server-starting-form
         `(require ~@(init-requires project)))
       (eval server-starting-form))))
@@ -78,9 +77,7 @@
         init-requires @(resolve 'leiningen.repl/init-requires)]
     (if trampoline/*trampoline?*
       (let [options (repl/options-for-reply project :port (repl-port project))
-            profiles [(:repl (user/profiles) repl/profile)
-                      repl/trampoline-profile
-                      vimclojure-profile]]
+            profiles (conj (repl/profiles-for project true true) vimclojure-profile)]
         (eval/eval-in-project
           (project/merge-profiles project profiles)
           (with-server
