@@ -1,4 +1,4 @@
-(defproject lein-tarsier "0.10.0"
+(defproject lein-tarsier "0.10.1-SNAPSHOT"
   :description "Launches a VimClojure server for Vim."
   :url "https://github.com/sattvik/lein-tarsier"
   :license {:name "Eclipse Public License"
