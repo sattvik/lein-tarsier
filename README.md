@@ -23,23 +23,12 @@ There are two parts to a successful lein-tarsier installation:
 
 While you can install this plug-in by adding it to the `:plugins` vector of
 your `project.clj`, it probably makes more sense to install it as a user-level
-plug-in.
-
-#### Leiningen 2
-
-Add `[lein-tarsier "0.9.4"]` to the `plugins` vector of your `:user`
-profile located in `~/.lein/profiles.clj`.  For example:
+plug-in.  To do this, add `[lein-tarsier "0.10.0"]` to the `plugins` vector of
+your `:user` profile located in `~/.lein/profiles.clj`.  For example:
 
 ```clj
-    {:user {:plugins [[lein-tarsier "0.9.4"]]}}
+    {:user {:plugins [[lein-tarsier "0.10.0"]]}}
 ```
-
-#### Leiningen 1
-
-Just run:
-
-    lein plugin install lein-tarsier 0.9.4
-
 
 ### Vim set-up
 
@@ -134,7 +123,7 @@ You can set these options using the profile feature of Leiningen 2.  For
 example:
 
 ```clj
-    {:user {:plugins [[lein-tarsier "0.9.4"]]
+    {:user {:plugins [[lein-tarsier "0.10.0"]]
             :vimclojure-opts {:repl true
 	                      :port 42}}}
 ```

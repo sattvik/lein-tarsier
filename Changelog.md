@@ -2,7 +2,7 @@
 
 This page will list all of the latest changes in lein-tarsier.
 
-## 0.10.0-SNAPSHOT
+## 0.10.0
 
 ### Bug fixes
 
